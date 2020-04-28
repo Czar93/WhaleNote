@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-
-import Sidebar from 'components/organisms/Sidebar/Sidebar';
+import UserPageTemplate from 'templates/UserPageTemplate';
 import Input from 'components/atoms/Input/Input';
 import Heading from 'components/atoms/Heading/Heading';
 import Paragraph from 'components/atoms/Paragraph/Paragraph';
@@ -31,9 +30,8 @@ const StyledParagraph = styled(Paragraph)`
   font-weight: ${({ theme }) => theme.light};
 `;
 
-const UserPageTamplate = ({ children, pageType }) => (
-  <>
-    <Sidebar pageType={pageType} />
+const GridTemplate = ({ children, pageType }) => (
+  <UserPageTemplate pageType={pageType}>
     <StyledWrapper>
       <StyledPageHeader>
         <Input search placeholder="Search" />
@@ -44,16 +42,16 @@ const UserPageTamplate = ({ children, pageType }) => (
       </StyledPageHeader>
       <StyledGrid>{children}</StyledGrid>
     </StyledWrapper>
-  </>
+  </UserPageTemplate>
 );
 
-UserPageTamplate.propTypes = {
-  children: PropTypes.element.isRequired,
+GridTemplate.propTypes = {
+  children: PropTypes.arrayOf(PropTypes.object).isRequired,
   pageType: PropTypes.oneOf(['notes', 'twitters', 'articles']),
 };
 
-UserPageTamplate.defaultProps = {
+GridTemplate.defaultProps = {
   pageType: 'notes',
 };
 
-export default UserPageTamplate;
+export default GridTemplate;

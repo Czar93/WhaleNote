@@ -1,8 +1,13 @@
 import styled, { css } from 'styled-components';
 
 const Button = styled.button`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: black;
+  text-decoration: none;
   padding: 0;
-  background-color: ${({ theme }) => theme.notes};
+  background-color: ${({ activeColor, theme }) => theme[activeColor]};
   width: 220px;
   height: 47px;
   border: none;

@@ -1,24 +1,30 @@
 import React from 'react';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
+import { routes } from 'routes';
 
-import MainTamplate from 'templates/MainTamplate';
+import MainTemplate from 'templates/MainTemplate';
 
 import Notes from 'views/Notes';
 import Articles from 'views/Articles';
 import Twitters from 'views/Twitters';
+import DetailsPage from 'views/DetailsPage';
 
 // import Button from 'components/atoms/Button/Button';
 // import Card from 'components/molecules/Card/Card';
 
 const Root = () => (
   <BrowserRouter>
-    <MainTamplate>
+    <MainTemplate>
       <Switch>
-        <Route exact path="/" component={Notes} />
-        <Route path="/articles" component={Articles} />
-        <Route path="/twitters" component={Twitters} />
+        <Route exact path={routes.home} render={() => <Redirect to="/notes" />} />
+        <Route exact path={routes.notes} component={Notes} />
+        <Route path={routes.note} component={DetailsPage} />
+        <Route exact path={routes.articles} component={Articles} />
+        <Route path={routes.article} component={DetailsPage} />
+        <Route exact path={routes.twitters} component={Twitters} />
+        <Route path={routes.twitter} component={DetailsPage} />
       </Switch>
-    </MainTamplate>
+    </MainTemplate>
   </BrowserRouter>
 );
 export default Root;
