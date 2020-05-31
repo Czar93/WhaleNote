@@ -1,54 +1,25 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
 import DetailsTemplate from 'templates/DetailsTemplate';
-import { routes } from 'routes/index';
+import withContext from 'hoc/withContext';
 
-class DetailsPage extends Component {
-  state = {
-    pageType: 'notes',
-  };
-
-  componentDidMount() {
-    switch (this.props.match.path) {
-      case routes.note:
-        this.setState({ pageType: 'notes' });
-        break;
-      case routes.twitter:
-        this.setState({ pageType: 'twitters' });
-        break;
-      case routes.article:
-        this.setState({ pageType: 'articles' });
-        break;
-      default:
-        this.setState({ pageType: 'notes' });
-    }
-  }
-
-  render() {
-    const dummyArticle = {
-      id: 1,
-      title: 'Wake me up when Vue ends',
-      content:
-        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus, tempora quibusdam natus modi tempore esse adipisci, dolore odit animi',
-      twitterName: 'hello_roman',
-      articleUrl: 'https://youtube.com/helloroman',
-      created: '1 day',
-    };
-
-    const { pageType } = this.state;
-    return (
-      <DetailsTemplate
-        pageType={pageType}
-        title={dummyArticle.title}
-        content={dummyArticle.content}
-        twitterName={dummyArticle.twitterName}
-        created={dummyArticle.twitterName}
-      />
-    );
-  }
-}
-DetailsPage.propTypes = {
-  match: PropTypes.string.isRequired,
+const dummyArticle = {
+  id: 1,
+  title: 'Przykładowa notatka',
+  content: 'Tutaj jeszcze dużo pracy mnie czeka',
+  twitterName: 'https://pbs.twimg.com/profile_images/1010862750401253377/Rof4XuYC_400x400.jpg',
+  articleUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+  created: '1 day',
 };
 
-export default DetailsPage;
+const DetailsPage = () => {
+  return (
+    <DetailsTemplate
+      title={dummyArticle.title}
+      content={dummyArticle.content}
+      twitterName={dummyArticle.twitterName}
+      created={dummyArticle.created}
+    />
+  );
+};
+
+export default withContext(DetailsPage);

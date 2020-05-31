@@ -1,43 +1,11 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+
 import GridTemplate from 'templates/GridTemplate';
 import Card from 'components/molecules/Card/Card';
 
-const twitters = [
-  {
-    id: 1,
-    title: 'Lebron James',
-    content:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus, tempora quibusdam natus modi tempore esse adipisci, dolore odit animi',
-    created: '1 day',
-    twitterName: 'kingjames',
-  },
-  {
-    id: 2,
-    title: 'Leo Messi',
-    content:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus, tempora quibusdam natus modi tempore esse adipisci, dolore odit animi',
-    created: '1 day',
-    twitterName: 'wearemessi',
-  },
-  {
-    id: 3,
-    title: 'Robert Lewandowski',
-    content:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus, tempora quibusdam natus modi tempore esse adipisci, dolore odit animi',
-    created: '5 days',
-    twitterName: 'Lewy_official',
-  },
-  {
-    id: 4,
-    title: 'Cristiano Ronaldo',
-    content:
-      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus, tempora quibusdam natus modi tempore esse adipisci, dolore odit animi',
-    created: '10 days',
-    twitterName: 'cristiano',
-  },
-];
-
-const Twitters = () => (
+const Twitters = ({ twitters }) => (
   <GridTemplate pageType="twitters">
     {twitters.map(({ id, title, content, twitterName, created }) => (
       <Card
@@ -53,4 +21,21 @@ const Twitters = () => (
   </GridTemplate>
 );
 
-export default Twitters;
+Twitters.propTypes = {
+  twitters: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      title: PropTypes.string.isRequired,
+      content: PropTypes.string.isRequired,
+      twitterName: PropTypes.string.isRequired,
+      created: PropTypes.string.isRequired,
+    }),
+  ),
+};
+
+Twitters.defaultProps = {
+  twitters: [],
+};
+const mapStateToProps = ({ twitters }) => ({ twitters });
+
+export default connect(mapStateToProps)(Twitters);

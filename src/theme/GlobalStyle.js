@@ -13,9 +13,12 @@ html {
 }
 
 body {
+    margin: 0;
+    padding: 0;
     font-size: 1.6rem;
     font-family: 'Montserrat', sans-serif;
-    padding-left: 150px;
+    background-color: #fceed1;
+    color: #2e3830;
 }
 `;
 

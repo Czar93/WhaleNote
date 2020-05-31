@@ -9,6 +9,10 @@ import Heading from 'components/atoms/Heading/Heading';
 import Button from 'components/atoms/Button/Button';
 import LinkIcon from 'assets/icons/link.svg';
 
+import { connect } from 'react-redux';
+import { removeItem as removeItemAction } from 'actions';
+import withContext from 'hoc/withContext';
+
 const StyledWrapper = styled.div`
   min-height: 380px;
   box-shadow: 0 10px 30px -10px hsla(0, 0%, 0%, 0.1);
@@ -21,7 +25,7 @@ const StyledWrapper = styled.div`
 const InnerWrapper = styled.div`
   position: relative;
   padding: 17px 30px;
-  background-color: ${({ activeColor, theme }) => (activeColor ? theme[activeColor] : 'white')};
+  background-color: ${({ activecolor, theme }) => (activecolor ? theme[activecolor] : 'white')};
 
   :first-of-type {
     z-index: 9999;
@@ -79,26 +83,35 @@ class Card extends Component {
   handleCardClick = () => this.setState({ redirect: true });
 
   render() {
-    const { id, cardType, title, created, twitterName, articleURL, content } = this.props;
+    const {
+      id,
+      pageContext,
+      title,
+      created,
+      twitterName,
+      articleURL,
+      content,
+      removeItem,
+    } = this.props;
 
     // eslint-disable-next-line react/destructuring-assignment
     if (this.state.redirect) {
-      return <Redirect to={`${cardType}/${id}`} />;
+      return <Redirect to={`${pageContext}/${id}`} />;
     }
 
     return (
       <StyledWrapper onClick={this.handleCardClick}>
-        <InnerWrapper activeColor={cardType}>
+        <InnerWrapper activecolor={pageContext}>
           <StyledHeading>{title}</StyledHeading>
           <DateInfo>{created}</DateInfo>
-          {cardType === 'twitters' && (
-            <StyledAvatar src={`https://avatars.io/twitter/${twitterName}`} />
-          )}
-          {cardType === 'articles' && <StyledLinkButton href={articleURL} />}
+          {pageContext === 'twitters' && <StyledAvatar src={twitterName} />}
+          {pageContext === 'articles' && <StyledLinkButton href={articleURL} />}
         </InnerWrapper>
         <InnerWrapper flex>
           <Paragraph>{content}</Paragraph>
-          <Button secondary>REMOVE</Button>
+          <Button onClick={() => removeItem(pageContext, id)} secondary>
+            REMOVE
+          </Button>
         </InnerWrapper>
       </StyledWrapper>
     );
@@ -106,19 +119,24 @@ class Card extends Component {
 }
 
 Card.propTypes = {
-  cardType: PropTypes.oneOf(['notes', 'twitters', 'articles']),
+  pageContext: PropTypes.oneOf(['notes', 'twitters', 'articles']),
   id: PropTypes.number.isRequired,
   title: PropTypes.string.isRequired,
   created: PropTypes.string.isRequired,
   twitterName: PropTypes.string,
   articleURL: PropTypes.string,
   content: PropTypes.string.isRequired,
+  removeItem: PropTypes.func.isRequired,
 };
 
 Card.defaultProps = {
-  cardType: 'notes',
+  pageContext: 'notes',
   twitterName: null,
   articleURL: null,
 };
 
-export default Card;
+const mapDispatchToProps = (dispatch) => ({
+  removeItem: (itemType, id) => dispatch(removeItemAction(itemType, id)),
+});
+
+export default connect(null, mapDispatchToProps)(withContext(Card));

@@ -1,12 +1,18 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import UserPageTemplate from 'templates/UserPageTemplate';
 import Input from 'components/atoms/Input/Input';
 import Heading from 'components/atoms/Heading/Heading';
 import Paragraph from 'components/atoms/Paragraph/Paragraph';
+import NewItemBar from 'components/organisms/NewItemBar/NewItemBar';
+import ButtonIcon from 'components/atoms/ButtonIcon/ButtonIcon';
+import plusIcon from 'assets/icons/plus.svg';
+
+import withContext from 'hoc/withContext';
 
 const StyledWrapper = styled.div`
+  position: relative;
   padding: 25px 150px 25px 70px;
 `;
 
@@ -30,28 +36,62 @@ const StyledParagraph = styled(Paragraph)`
   font-weight: ${({ theme }) => theme.light};
 `;
 
-const GridTemplate = ({ children, pageType }) => (
-  <UserPageTemplate pageType={pageType}>
-    <StyledWrapper>
-      <StyledPageHeader>
-        <Input search placeholder="Search" />
-        <StyledHeading big as="h1">
-          {pageType}
-        </StyledHeading>
-        <StyledParagraph>6 {pageType}</StyledParagraph>
-      </StyledPageHeader>
-      <StyledGrid>{children}</StyledGrid>
-    </StyledWrapper>
-  </UserPageTemplate>
-);
+const StyledButtonIcon = styled(ButtonIcon)`
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  background-color: ${({ activecolor, theme }) => theme[activecolor]};
+  border-radius: 50px;
+  z-index: 10000;
+`;
+
+class GridTemplate extends Component {
+  state = {
+    isNewItemBarVisable: false,
+  };
+
+  handleNewItemBarVisablity = () => {
+    this.setState((prevState) => ({
+      isNewItemBarVisable: !prevState.isNewItemBarVisable,
+    }));
+  };
+
+  render() {
+    const { children, pageContext } = this.props;
+    const { isNewItemBarVisable } = this.state;
+    return (
+      <UserPageTemplate>
+        <StyledWrapper>
+          <StyledPageHeader>
+            <Input search placeholder="Search" />
+            <StyledHeading big as="h1">
+              {pageContext}
+            </StyledHeading>
+            <StyledParagraph>6 {pageContext}</StyledParagraph>
+          </StyledPageHeader>
+          <StyledGrid>{children}</StyledGrid>
+          <StyledButtonIcon
+            icon={plusIcon}
+            activecolor={pageContext}
+            onClick={this.handleNewItemBarVisablity}
+          />
+          <NewItemBar
+            isVisable={isNewItemBarVisable}
+            handleClose={this.handleNewItemBarVisablity}
+          />
+        </StyledWrapper>
+      </UserPageTemplate>
+    );
+  }
+}
 
 GridTemplate.propTypes = {
+  pageContext: PropTypes.oneOf(['notes', 'twitters', 'articles']),
   children: PropTypes.arrayOf(PropTypes.object).isRequired,
-  pageType: PropTypes.oneOf(['notes', 'twitters', 'articles']),
 };
 
 GridTemplate.defaultProps = {
-  pageType: 'notes',
+  pageContext: 'notes',
 };
 
-export default GridTemplate;
+export default withContext(GridTemplate);
